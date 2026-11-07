@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Period Tracker BD</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1 data-i18n="appTitle">Period Tracker BD</h1>
+    <p class="sub" data-i18n="appSub">Private, offline menstrual cycle tracker</p>
+  </div>
+  <button id="lang-toggle" class="btn" type="button">Bangla</button>
+</header>
+
+<main>
+  <section class="cards">
+    <div class="card">
+      <h2 data-i18n="nextPeriod">Next period</h2>
+      <p class="big" id="next-period">-</p>
+      <p class="muted" id="avg-note"></p>
+    </div>
+    <div class="card">
+      <h2 data-i18n="fertileWindow">Fertile window</h2>
+      <p class="big" id="fertile-window">-</p>
+    </div>
+    <div class="card">
+      <h2 data-i18n="ovulation">Ovulation (estimated)</h2>
+      <p class="big" id="ovulation">-</p>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div><span data-i18n="avgCycle">Average cycle</span><strong id="stat-cycle">-</strong></div>
+    <div><span data-i18n="avgPeriod">Average period</span><strong id="stat-period">-</strong></div>
+    <div><span data-i18n="periodsLogged">Periods logged</span><strong id="stat-total">-</strong></div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" type="button" data-tab="calendar" data-i18n="tabCalendar">Calendar</button>
+    <button class="tab" type="button" data-tab="log" data-i18n="tabLog">Log &amp; History</button>
+    <button class="tab" type="button" data-tab="data" data-i18n="tabData">Data</button>
+  </nav>
+
+  <section class="panel active" id="panel-calendar">
+    <div class="cal-nav">
+      <button id="cal-prev" class="btn" type="button" aria-label="Previous month">&#8249;</button>
+      <h2 id="cal-title">-</h2>
+      <button id="cal-next" class="btn" type="button" aria-label="Next month">&#8250;</button>
+    </div>
+    <div class="cal-head" id="cal-head"></div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <ul class="legend">
+      <li><span class="sw period"></span><span data-i18n="legendPeriod">Period</span></li>
+      <li><span class="sw predicted"></span><span data-i18n="legendPredicted">Predicted period</span></li>
+      <li><span class="sw fertile"></span><span data-i18n="legendFertile">Fertile</span></li>
+      <li><span class="sw ovulation"></span><span data-i18n="legendOvulation">Ovulation</span></li>
+      <li><span class="sw today"></span><span data-i18n="legendToday">Today</span></li>
+    </ul>
+    <p class="hint">Tap a day to log symptoms for it.</p>
+  </section>
+
+  <section class="panel" id="panel-log">
+    <h2 data-i18n="addPeriod">Log a period</h2>
+    <form id="period-form" novalidate>
+      <label><span data-i18n="startDate">Start date</span>
+        <input id="period-start" type="date" required>
+      </label>
+      <label><span data-i18n="endDate">End date</span>
+        <span class="muted" data-i18n="endOptional">optional - leave blank if still going</span>
+        <input id="period-end" type="date">
+      </label>
+      <button class="btn primary" type="submit" data-i18n="addBtn">Add period</button>
+      <p class="msg" id="period-msg"></p>
+    </form>
+
+    <h2 data-i18n="history">Period history</h2>
+    <div id="history-list"></div>
+
+    <h2 data-i18n="dailyLog">Daily log</h2>
+    <form id="daily-form" novalidate>
+      <label><span data-i18n="dateLabel">Date</span>
+        <input id="daily-date" type="date" required>
+      </label>
+      <label><span data-i18n="flowLabel">Flow</span>
+        <select id="daily-flow">
+          <option value="none" data-i18n="flowNone">No flow</option>
+          <option value="light" data-i18n="flowLight">Light</option>
+          <option value="medium" data-i18n="flowMedium">Medium</option>
+          <option value="heavy" data-i18n="flowHeavy">Heavy</option>
+        </select>
+      </label>
+      <fieldset>
+        <legend data-i18n="symptomsLabel">Symptoms</legend>
+        <label class="check"><input type="checkbox" class="sym-check" value="cramps"> <span data-i18n="symCramps">Cramps</span></label>
+        <label class="check"><input type="checkbox" class="sym-check" value="headache"> <span data-i18n="symHeadache">Headache</span></label>
+        <label class="check"><input type="checkbox" class="sym-check" value="fatigue"> <span data-i18n="symFatigue">Fatigue</span></label>
+        <label class="check"><input type="checkbox" class="sym-check" value="bloating"> <span data-i18n="symBloating">Bloating</span></label>
+        <label class="check"><input type="checkbox" class="sym-check" value="backache"> <span data-i18n="symBackache">Backache</span></label>
+        <label class="check"><input type="checkbox" class="sym-check" value="mood"> <span data-i18n="symMood">Mood swings</span></label>
+        <label class="check"><input type="checkbox" class="sym-check" value="acne"> <span data-i18n="symAcne">Acne</span></label>
+      </fieldset>
+      <label><span data-i18n="noteLabel">Note</span>
+        <input id="daily-note" type="text" maxlength="140" data-i18n-ph="notePh" placeholder="Anything to remember...">
+      </label>
+      <button class="btn primary" type="submit" data-i18n="saveBtn">Save daily log</button>
+      <p class="msg" id="daily-msg"></p>
+    </form>
+
+    <h2 data-i18n="dailyLogList">Logged days</h2>
+    <div id="daily-list"></div>
+  </section>
+
+  <section class="panel" id="panel-data">
+    <h2 data-i18n="tabData">Data</h2>
+    <p>
+      <button id="export-btn" class="btn" type="button" data-i18n="exportBtn">Export JSON</button>
+      <label class="btn file-btn"><span data-i18n="importBtn">Import JSON</span>
+        <input id="import-file" type="file" accept="application/json,.json" hidden>
+      </label>
+    </p>
+    <p>
+      <input id="erase-word" type="text" data-i18n-ph="eraseConfirm" placeholder="Type DELETE to erase everything" autocomplete="off">
+      <button id="erase-btn" class="btn danger" type="button" data-i18n="eraseBtn">Erase all data</button>
+    </p>
+    <p class="msg" id="data-msg"></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <p data-i18n="disclaimer">Personal offline tool. Predictions are estimates from your own logged data using the standard 28-day cycle and a 14-day luteal phase - they are not medical advice. See a doctor for irregular cycles, very heavy bleeding, or severe pain.</p>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
